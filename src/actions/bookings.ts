@@ -192,6 +192,62 @@ export async function getAdminBookings(dateStr?: string) {
 }
 
 /**
+ * Gets student profile statistics and next class for gamification
+ */
+export async function getUserProfileStats() {
+    const session_auth = await auth()
+    if (!session_auth?.user?.id) throw new Error('Unauthorized')
+
+    await connectDB()
+    const userId = session_auth.user.id
+
+    // 1. Total attended classes (Lifetime)
+    const attendedCount = await Booking.countDocuments({ 
+        userId, 
+        status: 'attended' 
+    })
+
+    // 2. Confirmed (upcoming) bookings
+    const confirmedCount = await Booking.countDocuments({ 
+        userId, 
+        status: 'confirmed' 
+    })
+
+    // 3. This Month's Progress
+    const now = new Date()
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    const attendedThisMonth = await Booking.countDocuments({
+        userId,
+        status: 'attended',
+        updatedAt: { $gte: startOfMonth }
+    })
+
+    // 4. Find the NEXT class for countdown
+    const nextBooking = await Booking.findOne({ 
+        userId, 
+        status: 'confirmed' 
+    })
+    .populate({
+        path: 'sessionId',
+        match: { date: { $gte: new Date().setHours(0,0,0,0) } }, // Only today onwards
+        populate: { path: 'classTypeId' }
+    })
+    .sort({ 'sessionId.date': 1, 'sessionId.startTime': 1 })
+    .lean() as any
+
+    // Filter out if sessionId population failed due to date match
+    const validNextBooking = nextBooking?.sessionId ? nextBooking : null
+
+    return {
+        attendedCount,
+        confirmedCount,
+        attendedThisMonth,
+        nextClass: JSON.parse(JSON.stringify(validNextBooking?.sessionId || null)),
+        planLimit: 16 // Hardcoded for now, should come from MembershipPlan
+    }
+}
+
+/**
  * Toggles a booking status (confirmed -> attended)
  */
 export async function toggleAttendance(bookingId: string, currentStatus: string) {
@@ -204,4 +260,5 @@ export async function toggleAttendance(bookingId: string, currentStatus: string)
     revalidatePath('/admin/bookings')
     return { success: true }
 }
+
 
