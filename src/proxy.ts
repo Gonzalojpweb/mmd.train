@@ -8,7 +8,10 @@ export default auth((req) => {
     const isLoggedIn = !!req.auth
     const { pathname } = req.nextUrl
 
-    if (!isLoggedIn && pathname !== '/login') {
+    // Definimos qué rutas son públicas (No requieren login)
+    const isPublicRoute = pathname === '/' || pathname === '/register' || pathname === '/login'
+
+    if (!isLoggedIn && !isPublicRoute) {
         return NextResponse.redirect(new URL('/login', req.url))
     }
 
