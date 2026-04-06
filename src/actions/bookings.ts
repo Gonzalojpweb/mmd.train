@@ -4,8 +4,10 @@ import { connectDB } from '@/lib/mongodb'
 import ClassSession from '@/models/ClassSession'
 import Booking from '@/models/Booking'
 import ScheduleSlot from '@/models/ScheduleSlot'
+import ClassType from '@/models/ClassType'
 import Gym from '@/models/Gym'
 import { auth } from '@/lib/auth'
+
 import { revalidatePath } from 'next/cache'
 import { Types } from 'mongoose'
 
@@ -260,5 +262,40 @@ export async function toggleAttendance(bookingId: string, currentStatus: string)
     revalidatePath('/admin/bookings')
     return { success: true }
 }
+
+
+/**
+ * Gets high-level KPIs for the Admin Dashboard
+ */
+export async function getDashboardKPIs() {
+    await connectDB()
+    const now = new Date()
+    const todayStart = new Date(now.getTime())
+    todayStart.setHours(0,0,0,0)
+    const todayEnd = new Date(now.getTime())
+    todayEnd.setHours(23,59,59,999)
+
+    // 1. Total active students 
+    const User = (await import('@/models/User')).default
+    const totalStudents = await User.countDocuments({ role: 'alumno', active: true })
+
+    // 2. Bookings for today
+    const bookingsToday = await Booking.countDocuments({
+        createdAt: { $gte: todayStart, $lte: todayEnd }
+    })
+
+    // 3. Active class sessions today
+    const sessionsToday = await ClassSession.countDocuments({
+        date: { $gte: todayStart, $lte: todayEnd }
+    })
+
+    return {
+        totalStudents,
+        bookingsToday,
+        sessionsToday,
+        capacityUsage: sessionsToday > 0 ? Math.round((bookingsToday / (sessionsToday * 15)) * 100) / 100 : 0 
+    }
+}
+
 
 

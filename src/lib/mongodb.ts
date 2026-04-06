@@ -1,5 +1,15 @@
 import mongoose from 'mongoose'
 
+// Forced registration of all models to avoid MissingSchemaError in Next.js 15
+import '@/models/User'
+import '@/models/Gym'
+import '@/models/ClassType'
+import '@/models/ClassSession'
+import '@/models/Booking'
+import '@/models/ScheduleSlot'
+import '@/models/Payment'
+
+
 const MONGODB_URI = process.env.MONGODB_URI as string
 
 if (!MONGODB_URI) {

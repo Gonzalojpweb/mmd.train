@@ -1,6 +1,7 @@
 import { getAvailableSessions, getUserBookings } from '@/actions/bookings'
 import UpcomingBookings from '@/components/student/UpcomingBookings'
 import BookingList from '@/components/student/BookingList'
+import { cn } from '@/lib/utils'
 
 export default async function HomeOverviewPage() {
     const sessions = await getAvailableSessions()
@@ -56,8 +57,4 @@ export default async function HomeOverviewPage() {
             </div>
         </div>
     )
-}
-
-function cn(...inputs: any[]) {
-    return inputs.filter(Boolean).join(' ')
 }

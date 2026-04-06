@@ -1,113 +1,179 @@
 import { getUsers } from '@/actions/users'
-import { getRecentPayments } from '@/actions/payments'
-import { getScheduleSlots } from '@/actions/classes'
+import { getMonthlyRevenue } from '@/actions/payments'
+import { getDashboardKPIs, getAdminBookings } from '@/actions/bookings'
+import { Calendar, Users, Target, Zap, TrendingUp, Clock, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 export default async function AdminDashboard() {
-    // Simulando llamadas reales a la BD para tener algunos KPIs
-    const users = await getUsers()
-    const payments = await getRecentPayments()
-    const slots = await getScheduleSlots()
+    const kpis = await getDashboardKPIs()
+    const monthlyRevenue = await getMonthlyRevenue()
+    const todaySessions = await getAdminBookings()
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Visión General</h1>
-                <p className="text-gray-400">Resumen de actividad diaria del entrenamiento de alto rendimiento.</p>
+        <div className="space-y-10 animate-in fade-in duration-700 pb-20">
+            {/* Header Section */}
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-brand font-black uppercase tracking-[0.2em] text-[10px]">
+                    <div className="w-8 h-[1px] bg-brand" />
+                    Resumen del Sistema
+                </div>
+                <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic">
+                    Dashboard <span className="text-brand">MMD</span>
+                </h1>
             </div>
 
-            {/* KPI Cards Grid */}
+            {/* KPI Cards Grid - Premium Aesthetic */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                {/* Card 1: Alumnos */}
-                <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">👥</div>
-                    <p className="text-sm font-medium text-gray-400 mb-1">Alumnos Activos</p>
-                    <div className="flex items-baseline gap-2">
-                        <h2 className="text-4xl font-black text-white">{users.length}</h2>
-                        <span className="text-xs text-brand font-bold">+12 este mes</span>
+                {/* Alumnos Card */}
+                <div className="bg-zinc-900 border border-white/5 p-6 rounded-[2.5rem] relative overflow-hidden group shadow-xl transition-all hover:border-brand/30">
+                    <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Users size={120} />
+                    </div>
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Alumnos Totales</p>
+                        <div className="flex items-baseline gap-2">
+                            <h2 className="text-5xl font-black text-white italic tracking-tighter">{kpis.totalStudents}</h2>
+                            <span className="text-[10px] text-brand font-bold uppercase tracking-widest">+12%</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Card 2: Clases Hoy */}
-                <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group border-brand/30">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">🏃‍♂️</div>
-                    <p className="text-sm font-medium text-gray-400 mb-1">Clases Programadas Hoy</p>
-                    <div className="flex items-baseline gap-2">
-                        <h2 className="text-4xl font-black text-white">{slots.length}</h2>
-                        <span className="text-xs text-green-400 font-bold">Todas confirmadas</span>
+                {/* Clases Hoy Card */}
+                <div className="bg-zinc-900 border border-brand/20 p-6 rounded-[2.5rem] relative overflow-hidden group shadow-[0_0_30px_rgba(255,230,0,0.05)] transition-all hover:border-brand/50">
+                    <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Zap size={120} className="text-brand" />
+                    </div>
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Clases de Hoy</p>
+                        <div className="flex items-baseline gap-2">
+                            <h2 className="text-5xl font-black text-white italic tracking-tighter">{kpis.sessionsToday}</h2>
+                        </div>
                     </div>
                 </div>
 
-                {/* Card 3: Reservas / Asistencia */}
-                <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">🎯</div>
-                    <p className="text-sm font-medium text-gray-400 mb-1">Reservas del Día</p>
-                    <div className="flex items-baseline gap-2">
-                        <h2 className="text-4xl font-black text-white">45</h2>
-                        <span className="text-xs text-gray-500 font-medium">de 60 lugares</span>
+                {/* Reservas Hoy Card */}
+                <div className="bg-zinc-900 border border-white/5 p-6 rounded-[2.5rem] relative overflow-hidden group shadow-xl transition-all hover:border-brand/30">
+                    <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity text-brand">
+                        <Target size={120} />
                     </div>
-                    <div className="w-full bg-white/10 h-1.5 mt-4 rounded-full overflow-hidden">
-                        <div className="bg-brand h-full w-[75%] rounded-full"></div>
-                    </div>
-                </div>
-
-                {/* Card 4: Usuarios sin plan (Esperando aprobación) */}
-                <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group border-orange-500/30">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">⏳</div>
-                    <p className="text-sm font-medium text-gray-400 mb-1">Esperando Plan</p>
-                    <div className="flex items-baseline gap-2">
-                        <h2 className="text-4xl font-black text-white">3</h2>
-                        <span className="text-xs text-orange-400 font-bold">Por aprobar</span>
+                    <div className="relative z-10 flex flex-col h-full justify-between">
+                        <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Reservas del Día</p>
+                            <h2 className="text-5xl font-black text-white italic tracking-tighter mb-4">{kpis.bookingsToday}</h2>
+                        </div>
+                        <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                            <div 
+                                className="bg-brand h-full rounded-full transition-all duration-1000" 
+                                style={{ width: `${Math.min(kpis.capacityUsage * 100, 100)}%` }}
+                            />
+                        </div>
                     </div>
                 </div>
 
-                {/* Card 5: Ingresos (Mensual) */}
-                <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">💳</div>
-                    <p className="text-sm font-medium text-gray-400 mb-1">Ingresos (Mes actual)</p>
-                    <div className="flex items-baseline gap-2">
-                        <h2 className="text-4xl font-black text-white">${payments.length > 0 ? payments.reduce((acc: any, p: any) => acc + p.amount, 0) : '350K'}</h2>
+                {/* Ingresos Card */}
+                <div className="bg-zinc-900 border border-white/5 p-6 rounded-[2.5rem] relative overflow-hidden group shadow-xl transition-all hover:border-brand/30">
+                    <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <TrendingUp size={120} />
+                    </div>
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Ingresos (Mes)</p>
+                        <div className="flex items-baseline gap-2">
+                            <h2 className="text-4xl font-black text-white italic tracking-tighter">
+                                ${monthlyRevenue.toLocaleString('es-AR')}
+                            </h2>
+                        </div>
                     </div>
                 </div>
-                
             </div>
 
             {/* Quick Actions & Recent Activity Area */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-                {/* Main Activity Chart Placeholder */}
-                <div className="lg:col-span-2 glass-panel p-6 rounded-2xl min-h-[400px]">
-                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-brand"></span>
-                        Asistencia Semanal
-                    </h3>
-                    <div className="w-full h-64 border border-dashed border-white/10 rounded-xl flex items-center justify-center text-gray-500 text-sm">
-                        [Gráfico de barras de asistencia aquí]
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Próximas Clases - Real Data */}
+                <div className="lg:col-span-2 bg-zinc-900 border border-white/5 p-8 rounded-[2.5rem] backdrop-blur-sm">
+                    <div className="flex justify-between items-center mb-8">
+                        <h3 className="text-xl font-black text-white uppercase italic tracking-tighter flex items-center gap-3">
+                            <Calendar size={20} className="text-brand" />
+                            Agenda del Día
+                        </h3>
+                        <Link href="/admin/bookings" className="text-[10px] font-black uppercase tracking-widest text-brand hover:underline">
+                            Ver Asistencias
+                        </Link>
+                    </div>
+
+                    <div className="space-y-4">
+                        {todaySessions.length === 0 ? (
+                            <div className="p-12 text-center border border-dashed border-white/5 rounded-3xl text-zinc-600 text-sm italic">
+                                No hay clases registradas para hoy.
+                            </div>
+                        ) : (
+                            todaySessions.map((session: any) => (
+                                <div 
+                                    key={session._id} 
+                                    className="group flex items-center justify-between p-5 rounded-3xl bg-zinc-950 border border-white/5 hover:border-brand/40 transition-all cursor-pointer"
+                                >
+                                    <div className="flex items-center gap-6">
+                                        <div 
+                                            className="w-1.5 h-10 rounded-full" 
+                                            style={{ backgroundColor: session.classTypeId?.color }}
+                                        />
+                                        <div>
+                                            <p className="text-white font-black text-lg uppercase italic tracking-tighter leading-tight">
+                                                {session.classTypeId?.name}
+                                            </p>
+                                            <div className="flex items-center gap-3 mt-1">
+                                                <div className="flex items-center gap-1">
+                                                    <Clock size={12} className="text-zinc-500" />
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase">{session.startTime}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <Users size={12} className="text-zinc-500" />
+                                                    <span className="text-[10px] font-bold text-brand uppercase">{session.bookings.length} Anotados</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ChevronRight className="text-zinc-700 group-hover:text-brand transition-colors" />
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
 
-                {/* Agenda Breve */}
-                <div className="glass-panel p-6 rounded-2xl">
-                    <h3 className="text-lg font-bold text-white mb-4">Próximas Clases</h3>
-                    <div className="space-y-4">
-                        {[
-                            { time: '18:00', type: 'Levantamiento Olímpico', slots: '12/15' },
-                            { time: '19:00', type: 'Deportivo', slots: '20/20' },
-                            { time: '20:00', type: 'Semi Personalizado', slots: '5/8' }
-                        ].map((mClass, idx) => (
-                            <div key={idx} className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/5 hover:border-brand/50 transition-colors cursor-pointer">
-                                <div>
-                                    <p className="text-white font-medium text-sm">{mClass.type}</p>
-                                    <p className="text-brand text-xs font-bold">{mClass.time}</p>
-                                </div>
-                                <div className="text-xs text-gray-400 font-mono">
-                                    {mClass.slots}
-                                </div>
-                            </div>
-                        ))}
+                {/* Sidebar Column: Quick Stats or Tips */}
+                <div className="space-y-8">
+                    <div className="bg-brand rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
+                        <div className="relative z-10">
+                            <h4 className="text-black font-black text-2xl uppercase italic tracking-tighter leading-none mb-2">
+                                Tip del<br/>Día
+                            </h4>
+                            <p className="text-black/80 font-bold text-xs uppercase tracking-wider">
+                                Mantén la grilla actualizada para una mejor experiencia del alumno.
+                            </p>
+                        </div>
+                        <div className="absolute right-[-10%] bottom-[-10%] opacity-20 text-[100px]">💪</div>
                     </div>
-                    <button className="w-full mt-6 py-3 rounded-xl bg-brand text-black font-bold uppercase text-xs tracking-wider hover:bg-brand-hover transition-colors">
-                        Ver Agenda Completa
-                    </button>
+
+                    <div className="bg-zinc-950 border border-white/5 p-8 rounded-[2.5rem]">
+                        <h4 className="text-white font-black text-xs uppercase tracking-widest mb-6">Acceso Rápido</h4>
+                        <div className="grid grid-cols-2 gap-4">
+                            {[
+                                { name: 'Alumnos', href: '/admin/users' },
+                                { name: 'Finanzas', href: '/admin/finances' },
+                                { name: 'Grilla', href: '/admin/classes' },
+                                { name: 'Reservas', href: '/admin/bookings' }
+                            ].map((link) => (
+                                <Link 
+                                    key={link.name}
+                                    href={link.href}
+                                    className="h-12 flex items-center justify-center rounded-xl bg-white/5 text-zinc-400 text-[10px] font-black uppercase tracking-widest hover:bg-brand hover:text-black transition-all"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
