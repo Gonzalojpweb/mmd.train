@@ -4,12 +4,12 @@ import LoginButton from "@/components/LoginButton";
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-between min-h-[100dvh] bg-black font-sans p-6 sm:p-12 relative overflow-hidden">
-      
+
       {/* Imagen de Fondo High-Impact con Efecto de Movimiento */}
       <div className="absolute inset-0 z-0">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center opacity-60 scale-110 animate-slow-float"
-          style={{ 
+          style={{
             backgroundImage: "url('https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775500260/ChatGPT_Image_6_abr_2026_03_24_07_p.m._lawzxh.png')",
             filter: "brightness(0.7) contrast(1.1)"
           }}
@@ -27,34 +27,34 @@ export default function Home() {
 
       {/* Titular Principal Centrado */}
       <main className="flex flex-col items-center justify-center w-full z-10 flex-1">
-        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-center uppercase tracking-tighter leading-[0.95] max-w-5xl [text-shadow:_0_5px_30px_rgba(0,0,0,0.8)]" style={{ color: '#FFE600' }}>
-          Animarse te <br/> acerca más <br/> al éxito
+        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-4xl font-black text-center uppercase tracking-tighter leading-[0.95] max-w-5xl [text-shadow:_0_5px_30px_rgba(0,0,0,0.8)]" style={{ color: '#FFE600' }}>
+          Animarse te <br /> acerca más <br /> al éxito
         </h1>
       </main>
 
       {/* Sección Inferior: Logo y Botones de Acción */}
       <div className="w-full flex flex-col items-center justify-end z-10 pb-4 mt-8 flex-1">
-        
+
         {/* Logo MMD Compacto */}
         <div className="mb-10 sm:mb-16">
-            <img 
-                src="https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775491311/logo-removebg-preview_1_zupjab.png"
-                alt="MMD Entrenamiento Logo"
-                className="h-12 sm:h-16 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,230,0,0.4)]"
-            />
+          <img
+            src="https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775491311/logo-removebg-preview_1_zupjab.png"
+            alt="MMD Entrenamiento Logo"
+            className="h-12 sm:h-16 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,230,0,0.4)]"
+          />
         </div>
 
         {/* Botones */}
         <div className="flex flex-col w-full max-w-sm gap-4">
-            <LoginButton />
-            
-            {/* Registro tradicional */}
-            <Link 
-                href="/register" 
-                className="w-full flex items-center justify-center py-4 bg-white/5 backdrop-blur-md border border-white/10 hover:border-brand/50 text-white font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-white/10 active:scale-95"
-            >
-                Registrarme
-            </Link>
+          <LoginButton />
+
+          {/* Registro tradicional */}
+          <Link
+            href="/register"
+            className="w-full flex items-center justify-center py-4 bg-white/5 backdrop-blur-md border border-white/10 hover:border-brand/50 text-white font-semibold uppercase tracking-widest rounded-xl transition-all hover:bg-white/10 active:scale-95"
+          >
+            Registrarme
+          </Link>
         </div>
 
       </div>
