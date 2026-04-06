@@ -4,12 +4,12 @@ export default async function Topbar() {
   const session = await auth()
 
   return (
-    <header className="h-20 glass-panel border-b border-border flex items-center justify-between px-8 absolute top-0 right-0 left-64 z-40">
-      <div>
-        <h1 className="text-xl font-bold tracking-tight text-white">
+    <header className="h-20 glass-panel border-b border-border flex items-center justify-between px-4 md:px-8 fixed top-0 right-0 left-0 md:left-64 z-40">
+      <div className="pl-12 md:pl-0">
+        <h1 className="text-lg md:text-xl font-bold tracking-tight text-white line-clamp-1">
           Panel de Control
         </h1>
-        <p className="text-sm text-gray-400">
+        <p className="text-xs md:text-sm text-gray-400 hidden sm:block">
           Supervisando las actividades del centro
         </p>
       </div>

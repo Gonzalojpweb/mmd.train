@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
 const NAV_ITEMS = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
@@ -13,16 +14,48 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <aside className="w-64 h-screen fixed left-0 top-0 border-r border-border glass-panel flex flex-col z-50">
-      {/* Brand Header */}
-      <div className="h-20 flex items-center justify-center border-b border-border">
-        <div className="w-10 h-10 bg-brand rounded-full items-center justify-center flex mr-3">
-            <span className="text-black font-black text-xl italic tracking-tighter">M</span>
+    <>
+      {/* Mobile Hamburger Button */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden fixed top-5 left-4 z-50 p-2 bg-panel border border-border rounded-lg text-white"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          {isOpen ? (
+            <>
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </>
+          ) : (
+            <>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </>
+          )}
+        </svg>
+      </button>
+
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`w-64 h-screen fixed left-0 top-0 border-r border-border glass-panel flex flex-col z-50 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        {/* Brand Header */}
+        <div className="h-20 flex items-center justify-center border-b border-border mt-14 md:mt-0">
+          <div className="w-10 h-10 bg-brand rounded-full items-center justify-center flex mr-3">
+              <span className="text-black font-black text-xl italic tracking-tighter">M</span>
+          </div>
+          <h2 className="text-xl font-bold uppercase tracking-widest text-white">MMD</h2>
         </div>
-        <h2 className="text-xl font-bold uppercase tracking-widest text-white">MMD</h2>
-      </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-4 py-6 space-y-2">
@@ -32,6 +65,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setIsOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${
                 isActive
                   ? 'bg-brand text-black shadow-[0_0_15px_rgba(255,230,0,0.3)]'
@@ -50,5 +84,6 @@ export default function Sidebar() {
         Alto Rendimiento
       </div>
     </aside>
+    </>
   )
 }

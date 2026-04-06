@@ -16,12 +16,13 @@ export default function AdminLayout({
       <Topbar />
       
       {/* 
-        Main layout content shifts to the right by 64 (256px) to accommodate sidebar 
+        Main layout content shifts to the right on desktop to accommodate sidebar 
         and down by 20 (80px) to accommodate topbar 
       */}
-      <main className="flex-1 ml-64 mt-20 p-8 overflow-y-auto">
+      <main className="flex-1 md:ml-64 mt-20 p-4 md:p-8 overflow-y-auto w-full">
         {children}
       </main>
     </div>
   )
 }
+
