@@ -3,31 +3,44 @@ import LoginButton from "@/components/LoginButton";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-between min-h-[100dvh] bg-background font-sans p-6 sm:p-12 relative overflow-hidden">
+    <div className="flex flex-col flex-1 items-center justify-between min-h-[100dvh] bg-black font-sans p-6 sm:p-12 relative overflow-hidden">
       
-      {/* Luz de fondo ambiental (Glassmorphism sutil) */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand opacity-5 rounded-full blur-[100px] pointer-events-none"></div>
+      {/* Imagen de Fondo High-Impact con Efecto de Movimiento */}
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-60 scale-110 animate-slow-float"
+          style={{ 
+            backgroundImage: "url('https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775500260/ChatGPT_Image_6_abr_2026_03_24_07_p.m._lawzxh.png')",
+            filter: "brightness(0.7) contrast(1.1)"
+          }}
+        ></div>
+        {/* Overlay para Oscurecer Bordes (Vignette) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-40"></div>
+      </div>
+
+      {/* Luz de fondo ambiental (Glow) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand opacity-10 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
       {/* Spacer Arriba */}
-      <div className="w-full h-1/4"></div>
+      <div className="w-full h-1/4 z-10"></div>
 
       {/* Titular Principal Centrado */}
       <main className="flex flex-col items-center justify-center w-full z-10 flex-1">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-center uppercase tracking-tighter leading-[1.1] max-w-5xl [text-shadow:_0_0_30px_rgba(255,230,0,0.2)]" style={{ color: '#FFE600' }}>
-          Animarse te acerca más al éxito
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-center uppercase tracking-tighter leading-[0.95] max-w-5xl [text-shadow:_0_5px_30px_rgba(0,0,0,0.8)]" style={{ color: '#FFE600' }}>
+          Animarse te <br/> acerca más <br/> al éxito
         </h1>
       </main>
 
       {/* Sección Inferior: Logo y Botones de Acción */}
       <div className="w-full flex flex-col items-center justify-end z-10 pb-4 mt-8 flex-1">
         
-        {/* Logo MMD */}
+        {/* Logo MMD Compacto */}
         <div className="mb-10 sm:mb-16">
             <img 
                 src="https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775491311/logo-removebg-preview_1_zupjab.png"
                 alt="MMD Entrenamiento Logo"
-                className="h-14 sm:h-20 w-auto object-contain opacity-90 drop-shadow-2xl"
-                style={{ filter: "drop-shadow(0px 4px 10px rgba(0,0,0,0.5))" }}
+                className="h-12 sm:h-16 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,230,0,0.4)]"
             />
         </div>
 
@@ -38,7 +51,7 @@ export default function Home() {
             {/* Registro tradicional */}
             <Link 
                 href="/register" 
-                className="w-full flex items-center justify-center py-4 bg-transparent border border-white/20 hover:border-brand/50 text-white font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-white/5 active:scale-95"
+                className="w-full flex items-center justify-center py-4 bg-white/5 backdrop-blur-md border border-white/10 hover:border-brand/50 text-white font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-white/10 active:scale-95"
             >
                 Registrarme
             </Link>
@@ -48,3 +61,4 @@ export default function Home() {
     </div>
   );
 }
+
