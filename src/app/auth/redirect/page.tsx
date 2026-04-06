@@ -1,6 +1,9 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
+/**
+ * Redirects the user to the correct dashboard based on their role.
+ */
 export default async function AuthRedirectPage() {
     const session = await auth()
 
@@ -16,6 +19,6 @@ export default async function AuthRedirectPage() {
         redirect('/home')
     }
 
-    // Fallback if role is missing
+    // Default Fallback
     redirect('/login')
 }
