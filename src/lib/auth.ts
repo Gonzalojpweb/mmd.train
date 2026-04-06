@@ -10,16 +10,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         async signIn({ user, account }) {
           try {
-            console.log("--- INICIANDO SIGNIN ---");
-            console.log("Email intentando entrar:", user.email);
+            console.log("--- DEBUG SIGNIN START ---");
+            console.log("User email:", user.email);
+            console.log("Environment check:", { 
+                hasMongo: !!process.env.MONGODB_URI,
+                hasSecret: !!process.env.AUTH_SECRET || !!process.env.NEXTAUTH_SECRET,
+                adminEmailEnv: process.env.ADMIN_EMAIL 
+            });
             
             await connectDB()
-            console.log("MongoDB Conectado correctamente.");
+            console.log("--- MongoDB: Connected Successfully ---");
             
-            // Si es Google, permitimos auto-registro si no existe
             if (account?.provider === 'google') {
-                // 1. Aseguramos que el gimnasio MMD exista (Upsert)
-                // Si no existe lo crea, si existe lo ignora.
                 const gym = await Gym.findOneAndUpdate(
                     { slug: 'mmd' },
                     { 
@@ -29,39 +31,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     },
                     { upsert: true, new: true }
                 )
-                console.log("Gimnasio verificado/creado con ID:", gym?._id);
+                console.log("--- Gym Found/Created ---", gym?._id);
 
-                const exists = await User.findOne({ email: user.email })
+                // Normalizamos el email para evitar fallos de mayúsculas
+                const userEmail = user.email?.toLowerCase()
+                const exists = await User.findOne({ email: userEmail })
                 
                 if (!exists) {
-                    console.log("Usuario no existe en BD, procediendo a crear...");
-                    // El primer usuario con este correo será admin automáticamente
-                    const adminEmail = process.env.ADMIN_EMAIL || 'pgonzalojose@gmail.com'
-                    const isNewAdmin = user.email === adminEmail
+                    console.log("--- Creating New User ---");
+                    const adminEmailFromEnv = process.env.ADMIN_EMAIL?.toLowerCase() || 'pgonzalojose@gmail.com'
+                    const isNewAdmin = userEmail === adminEmailFromEnv
 
-                    // Creamos el nuevo usuario atleta o admin con gymId
                     await User.create({
                         gymId: gym._id,
                         name: user.name,
-                        email: user.email,
+                        email: userEmail,
                         image: user.image,
                         role: isNewAdmin ? 'admin' : 'alumno',
                         active: true,
                         passwordHash: 'google-oauth'
                     })
-                    console.log("Nuevo usuario creado exitosamente.");
+                    console.log("--- User Created Successfully ---", isNewAdmin ? "as ADMIN" : "as ALUMNO");
                 } else {
-                    console.log("Usuario ya existe en BD.");
+                    console.log("--- User Already Exists ---", exists.role);
                 }
                 return true
             }
 
-            // Para login tradicional (email/password), el usuario ya debe existir
-            const exists = await User.findOne({ email: user.email })
-            return !!exists
-          } catch (error) {
-            console.error("!!! ERROR CRÍTICO EN SIGNIN !!!", error);
-            // Esto mandará el detalle al log de Vercel
+            return true
+          } catch (error: any) {
+            console.error("!!! FATAL AUTH ERROR !!!", error.message);
+            // Si el error es de conexión de Mongo, lo sabremos aquí.
             return false;
           }
         },

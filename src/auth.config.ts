@@ -10,6 +10,8 @@ export const authConfig = {
     ],
     pages: {
         signIn: '/login',
-        error: '/login',
+        error: '/login', // Redirige aquí si falla el login
     },
+    trustHost: true, // Crucial para Vercel en Next.js 15
 } satisfies NextAuthConfig
+
