@@ -10,6 +10,10 @@ export interface IUser extends Document {
     passwordHash: string
     role: UserRole
     active: boolean
+    age?: number
+    weight?: number
+    height?: number
+    profileImageUrl?: string
     createdAt: Date
 }
 
@@ -21,6 +25,10 @@ const UserSchema = new Schema<IUser>({
     passwordHash: { type: String, required: true },
     role: { type: String, enum: ['admin', 'alumno'], required: true },
     active: { type: Boolean, default: true },
+    age: { type: Number },
+    weight: { type: Number },
+    height: { type: Number },
+    profileImageUrl: { type: String },
 }, { timestamps: true })
 
 UserSchema.index({ gymId: 1, email: 1 }, { unique: true })
