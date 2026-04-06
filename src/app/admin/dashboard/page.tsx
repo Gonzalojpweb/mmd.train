@@ -51,7 +51,17 @@ export default async function AdminDashboard() {
                     </div>
                 </div>
 
-                {/* Card 4: Ingresos (Mensual) */}
+                {/* Card 4: Usuarios sin plan (Esperando aprobación) */}
+                <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group border-orange-500/30">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">⏳</div>
+                    <p className="text-sm font-medium text-gray-400 mb-1">Esperando Plan</p>
+                    <div className="flex items-baseline gap-2">
+                        <h2 className="text-4xl font-black text-white">3</h2>
+                        <span className="text-xs text-orange-400 font-bold">Por aprobar</span>
+                    </div>
+                </div>
+
+                {/* Card 5: Ingresos (Mensual) */}
                 <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">💳</div>
                     <p className="text-sm font-medium text-gray-400 mb-1">Ingresos (Mes actual)</p>

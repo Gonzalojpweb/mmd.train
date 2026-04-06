@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LoginButton from "@/components/LoginButton";
 
 export default function Home() {
   return (
@@ -32,16 +33,11 @@ export default function Home() {
 
         {/* Botones */}
         <div className="flex flex-col w-full max-w-sm gap-4">
-            <Link 
-                href="/login" 
-                className="w-full flex items-center justify-center py-4 bg-brand hover:bg-brand-hover text-black font-black uppercase tracking-widest rounded-xl transition-transform hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(255,230,0,0.2)]"
-            >
-                Iniciar Sesión
-            </Link>
+            <LoginButton />
             
-            {/* Como usamos Google Auth, registrarse lleva directo a la misma validación */}
+            {/* Registro tradicional */}
             <Link 
-                href="/login" 
+                href="/register" 
                 className="w-full flex items-center justify-center py-4 bg-transparent border border-white/20 hover:border-brand/50 text-white font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-white/5 active:scale-95"
             >
                 Registrarme
