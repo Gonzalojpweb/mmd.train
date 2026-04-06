@@ -51,10 +51,11 @@ export default function Sidebar() {
       <aside className={`w-64 h-screen fixed left-0 top-0 border-r border-border glass-panel flex flex-col z-50 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         {/* Brand Header */}
         <div className="h-20 flex items-center justify-center border-b border-border mt-14 md:mt-0">
-          <div className="w-10 h-10 bg-brand rounded-full items-center justify-center flex mr-3">
-              <span className="text-black font-black text-xl italic tracking-tighter">M</span>
-          </div>
-          <h2 className="text-xl font-bold uppercase tracking-widest text-white">MMD</h2>
+          <img 
+            src="https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775491311/logo-removebg-preview_1_zupjab.png"
+            alt="MMD Logo"
+            className="h-10 w-auto object-contain opacity-90 drop-shadow-lg"
+          />
         </div>
 
       {/* Navigation */}
