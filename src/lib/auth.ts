@@ -13,20 +13,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             
             // Si es Google, permitimos auto-registro si no existe
             if (account?.provider === 'google') {
+                // 1. Aseguramos que el gimnasio MMD exista (Upsert)
+                // Si no existe lo crea, si existe lo ignora.
+                const gym = await Gym.findOneAndUpdate(
+                    { slug: 'mmd' },
+                    { 
+                        name: 'MMD Entrenamiento', 
+                        slug: 'mmd', 
+                        active: true 
+                    },
+                    { upsert: true, new: true }
+                )
+
                 const exists = await User.findOne({ email: user.email })
                 
                 if (!exists) {
-                    // Buscamos el gym por defecto (mmd)
-                    const gym = await Gym.findOne({ slug: 'mmd' })
-                    if (!gym) return false 
+                    // El primer usuario con este correo será admin automáticamente
+                    const adminEmail = process.env.ADMIN_EMAIL || 'pgonzalojose@gmail.com'
+                    const isNewAdmin = user.email === adminEmail
 
-                    // Creamos el nuevo usuario atleta con gymId
+                    // Creamos el nuevo usuario atleta o admin con gymId
                     await User.create({
                         gymId: gym._id,
                         name: user.name,
                         email: user.email,
                         image: user.image,
-                        role: 'alumno', // Por defecto todos son alumnos
+                        role: isNewAdmin ? 'admin' : 'alumno',
                         active: true,
                         passwordHash: 'google-oauth'
                     })
@@ -34,7 +46,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 return true
             }
 
-            // Para otros (ej: login tradicional), el usuario ya debe existir
+            // Para login tradicional (email/password), el usuario ya debe existir
             const exists = await User.findOne({ email: user.email })
             return !!exists
         },
