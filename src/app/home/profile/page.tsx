@@ -2,11 +2,19 @@ import { auth } from '@/lib/auth'
 import { getUserProfileStats } from '@/actions/bookings'
 import ClassCountdown from '@/components/student/ClassCountdown'
 import GamificationStats from '@/components/student/GamificationStats'
-import { User, LogOut, Settings, Award } from 'lucide-react'
+import { User, LogOut, Settings, Award, Zap, Target, Clock } from 'lucide-react'
+import BodyRecord from '@/models/BodyRecord'
+import { connectDB } from '@/lib/mongodb'
+import { cn } from '@/lib/utils'
 
 export default async function ProfilePage() {
     const session = await auth()
     const stats = await getUserProfileStats()
+    
+    await connectDB()
+    const latestRecord = await BodyRecord.findOne({ userId: session?.user?.id })
+        .sort({ date: -1 })
+        .lean() as any
 
     return (
         <div className="space-y-8 animate-in slide-in-from-right fade-in duration-700 pb-24">
@@ -50,8 +58,66 @@ export default async function ProfilePage() {
 
             {/* GAMIFICATION STATS */}
             <GamificationStats stats={stats} />
+            
+            {/* NEW: BIOMETRICS SECTION */}
+            <div className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden group shadow-xl">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <Zap size={80} />
+                </div>
+                
+                <h3 className="text-brand text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                    Mi Estado Físico
+                    <div className="h-1 w-1 bg-brand rounded-full" />
+                </h3>
 
-            {/* Biometrics & Subscription (Simplified for cleaner look) */}
+                {latestRecord ? (
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-zinc-900/50 border border-white/5 p-4 rounded-2xl">
+                                <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest mb-1">Peso Actual</p>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-2xl font-black text-white italic">{latestRecord.weight}</span>
+                                    <span className="text-[10px] font-bold text-zinc-500 uppercase">kg</span>
+                                </div>
+                            </div>
+                            <div className="bg-zinc-900/50 border border-white/5 p-4 rounded-2xl">
+                                <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest mb-1">IMC</p>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-2xl font-black text-brand italic">{latestRecord.imc}</span>
+                                    <span className="text-[8px] px-1.5 py-0.5 bg-brand/10 text-brand rounded font-black italic uppercase">
+                                        {latestRecord.imcClassification}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-zinc-900/50 border border-white/5 p-5 rounded-2xl flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-brand/10 rounded-lg text-brand">
+                                    <Target size={18} />
+                                </div>
+                                <div>
+                                    <p className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em]">Peso Ideal (Est)</p>
+                                    <p className="text-sm font-black text-white italic">{latestRecord.idealWeight} kg</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest mb-1">Última Vez</p>
+                                <p className="text-[10px] font-bold text-zinc-400 uppercase">
+                                    {new Date(latestRecord.date).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="py-6 text-center">
+                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Aún no tienes mediciones registradas.</p>
+                        <p className="text-[9px] text-zinc-700 font-bold uppercase mt-1">Pídele a tu coach que te registre hoy.</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Biometrics & Subscription */}
             <div className="grid grid-cols-1 gap-6">
                 <div className="bg-zinc-950 border border-white/5 p-6 rounded-[2rem] space-y-4">
                     <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 border-b border-white/5 pb-3">Suscripción</h3>

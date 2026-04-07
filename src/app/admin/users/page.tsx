@@ -1,5 +1,7 @@
 import { getUsers } from '@/actions/users'
+import Link from 'next/link'
 import { User, Mail, Calendar, ShieldCheck, Search, Filter } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default async function UsersPage() {
     const users = await getUsers()
@@ -88,9 +90,12 @@ export default async function UsersPage() {
                                 </div>
                             </div>
 
-                            <button className="w-full mt-6 py-2.5 rounded-xl bg-white/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:bg-white/10 hover:text-white transition-all">
+                            <Link 
+                                href={`/admin/alumnos/${user._id}`}
+                                className="w-full mt-6 py-2.5 rounded-xl bg-white/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:bg-white/10 hover:text-white transition-all text-center block"
+                            >
                                 Ver Perfil Detallado
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 ))}
@@ -98,8 +103,3 @@ export default async function UsersPage() {
         </div>
     )
 }
-
-function cn(...inputs: any[]) {
-    return inputs.filter(Boolean).join(' ')
-}
-

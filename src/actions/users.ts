@@ -11,3 +11,10 @@ export async function getUsers() {
     // Need to convert ObjectIds to strings for plain objects in Server Actions
     return JSON.parse(JSON.stringify(users))
 }
+
+export async function getUserById(id: string) {
+    await connectDB()
+    const user = await User.findById(id).lean()
+    if (!user) return null
+    return JSON.parse(JSON.stringify(user))
+}
