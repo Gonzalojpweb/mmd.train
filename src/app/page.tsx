@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LoginButton from "@/components/LoginButton";
+import { MapPin } from "lucide-react";
 
 export default function Home() {
   return (
@@ -21,13 +22,48 @@ export default function Home() {
 
       {/* Luz de fondo ambiental (Glow) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand opacity-10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+      
+      {/* Botones de Redes/Ubicación en el Top */}
+      <div className="absolute top-8 right-8 z-20 flex gap-3">
+        <a 
+          href="https://maps.app.goo.gl/YyjRwE2tCEUFUGmE8" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white hover:text-brand hover:border-brand/40 transition-all active:scale-95 group"
+          title="Ubicación"
+        >
+          <MapPin size={20} />
+        </a>
+        <a 
+          href="https://www.instagram.com/mmd.entrenamiento/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white hover:text-brand hover:border-brand/40 transition-all active:scale-95 group"
+          title="Instagram"
+        >
+          <svg 
+            viewBox="0 0 24 24" 
+            width="20" 
+            height="20" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+      </div>
 
       {/* Spacer Arriba */}
       <div className="w-full h-1/4 z-10"></div>
 
       {/* Titular Principal Centrado */}
       <main className="flex flex-col items-center justify-center w-full z-10 flex-1">
-        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-4xl font-black text-center uppercase tracking-tighter leading-[0.95] max-w-5xl [text-shadow:_0_5px_30px_rgba(0,0,0,0.8)]" style={{ color: '#FFE600' }}>
+        <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-4xl font-black text-center uppercase tracking-tighter leading-[0.95] max-w-5xl [text-shadow:_0_5px_30px_rgba(0,0,0,0.8)]" style={{ color: '#FFE600' }}>
           Animarse te <br /> acerca más <br /> al éxito
         </h1>
       </main>
