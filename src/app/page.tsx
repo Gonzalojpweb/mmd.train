@@ -24,12 +24,12 @@ export default function Home() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand opacity-10 rounded-full blur-[120px] pointer-events-none z-0"></div>
       
       {/* Botones de Redes/Ubicación en el Top */}
-      <div className="absolute top-8 right-8 z-20 flex gap-3">
+      <div className="fixed top-6 right-6 z-50 flex gap-3">
         <a 
           href="https://maps.app.goo.gl/YyjRwE2tCEUFUGmE8" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white hover:text-brand hover:border-brand/40 transition-all active:scale-95 group"
+          className="p-3 bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-2xl text-white hover:text-brand hover:border-brand/40 transition-all active:scale-95 group shadow-2xl"
           title="Ubicación"
         >
           <MapPin size={20} />
@@ -38,7 +38,7 @@ export default function Home() {
           href="https://www.instagram.com/mmd.entrenamiento/" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white hover:text-brand hover:border-brand/40 transition-all active:scale-95 group"
+          className="p-3 bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-2xl text-white hover:text-brand hover:border-brand/40 transition-all active:scale-95 group shadow-2xl"
           title="Instagram"
         >
           <svg 
