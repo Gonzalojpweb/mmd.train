@@ -4,21 +4,38 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'MMD Entrenamiento',
     short_name: 'MMD',
-    description: 'Sistema de gestión y entrenamiento para MMD',
+    description: 'Sistema oficial de entrenamiento MMD. Animarse te acerca más al éxito.',
     start_url: '/',
+    scope: '/',
     display: 'standalone',
+    orientation: 'portrait',
     background_color: '#000000',
     theme_color: '#FFE600',
+    categories: ['fitness', 'health', 'sports'],
     icons: [
       {
-        src: 'https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775491311/logo-removebg-preview_1_zupjab.png',
+        src: '/logo.png',
         sizes: '192x192',
         type: 'image/png',
+        purpose: 'any',
       },
       {
-        src: 'https://res.cloudinary.com/dt6iu9m9f/image/upload/v1775491311/logo-removebg-preview_1_zupjab.png',
+        src: '/logo.png',
         sizes: '512x512',
         type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/logo.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: '/logo.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
       },
     ],
   }
