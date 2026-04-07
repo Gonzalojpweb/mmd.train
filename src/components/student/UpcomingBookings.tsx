@@ -7,10 +7,16 @@ import { cn } from '@/lib/utils'
 
 interface UpcomingBookingsProps {
     bookings: any[]
+    showHistory?: boolean
 }
 
-export default function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
+export default function UpcomingBookings({ bookings, showHistory = false }: UpcomingBookingsProps) {
     const [isPending, startTransition] = useTransition()
+
+    // Filter bookings based on role
+    const filteredBookings = showHistory 
+        ? bookings 
+        : bookings.filter(b => b.status === 'confirmed')
 
     const handleCancel = async (id: string) => {
         if (!confirm('¿Deseas cancelar esta reserva?')) return
@@ -19,7 +25,7 @@ export default function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
         })
     }
 
-    if (bookings.length === 0) return null
+    if (filteredBookings.length === 0) return null
 
     return (
         <div className="space-y-4">
@@ -29,21 +35,29 @@ export default function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
             </h3>
             
             <div className="grid grid-cols-1 gap-4">
-                {bookings.map((booking: any) => {
+                {filteredBookings.map((booking: any) => {
                     const session = booking.sessionId
                     const dateStr = new Date(session.date).toLocaleDateString('es-ES', { 
                         weekday: 'short', 
                         day: 'numeric', 
                         month: 'short' 
                     })
+                    
+                    const isPast = booking.status === 'attended' || booking.status === 'cancelled'
 
                     return (
                         <div 
                             key={booking._id}
-                            className="bg-zinc-900 border border-brand/40 rounded-[2rem] overflow-hidden shadow-[0_0_20px_rgba(255,230,0,0.05)] animate-in slide-in-from-left-4 duration-500"
+                            className={cn(
+                                "bg-zinc-900 border rounded-[2rem] overflow-hidden shadow-[0_0_20px_rgba(255,230,0,0.05)] animate-in slide-in-from-left-4 duration-500",
+                                !isPast ? "border-brand/40" : "border-white/5 opacity-80"
+                            )}
                         >
                             <div className="p-5 flex gap-5">
-                                <div className="w-16 h-16 rounded-2xl bg-brand text-black flex flex-col items-center justify-center shrink-0 shadow-lg">
+                                <div className={cn(
+                                    "w-16 h-16 rounded-2xl flex flex-col items-center justify-center shrink-0 shadow-lg",
+                                    !isPast ? "bg-brand text-black" : "bg-zinc-800 text-zinc-500"
+                                )}>
                                     <span className="text-[10px] font-black uppercase leading-tight">{dateStr.split(' ')[0]}</span>
                                     <span className="text-2xl font-black leading-none">{dateStr.split(' ')[1]}</span>
                                 </div>

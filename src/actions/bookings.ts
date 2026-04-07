@@ -152,11 +152,15 @@ export async function getUserBookings() {
     if (!session_auth?.user?.id) return []
 
     await connectDB()
-    const bookings = await Booking.find({ userId: session_auth.user.id, status: 'confirmed' })
+    const bookings = await Booking.find({ 
+        userId: session_auth.user.id, 
+        status: { $in: ['confirmed', 'attended', 'cancelled'] } 
+    })
         .populate({
             path: 'sessionId',
             populate: { path: 'classTypeId' }
         })
+        .sort({ createdAt: -1 })
         .lean()
         
     return JSON.parse(JSON.stringify(bookings))
